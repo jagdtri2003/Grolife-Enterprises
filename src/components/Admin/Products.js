@@ -1,37 +1,57 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import firebaseInstance from "../../firebase/firebase";
-import { useTable } from "react-table"; 
-import { useNavigate } from "react-router-dom";
+import { useTable } from "react-table";
+import ProductModal from "./ProductModal"; // Import the modal component
+
 function Products() {
-    const [products,setProducts] = useState([]);
-    const getProducts = async ()=>{
-        const pro = await firebaseInstance.fetchProducts();
-        setProducts(pro);
-    }
-    useEffect(()=>{
-        getProducts();
-    },[])  
-    const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false); // Modal state
+  const [editProduct, setEditProduct] = useState(null); // Product to edit
+
+  const getProducts = async () => {
+    setProducts([]);
+    const pro = await firebaseInstance.fetchProducts();
+    setProducts(pro);
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+
   // Handle edit product
   const handleEdit = (productId) => {
-    console.log("Editing product with ID:", productId);
-    // Add your edit logic here
+      console.log(products);
+      const product = products.find((p) => p.id === productId);
+      console.log(product)
+      setEditProduct(product);
+      setModalOpen(true); // Open modal for editing
   };
 
   // Handle delete product
   const handleDelete = async (productId) => {
-    console.log("Deleting product with ID:", productId);
-    // Add your delete logic here
     await firebaseInstance.deleteProduct(productId);
     getProducts();
   };
 
-  // Define table columns
+  // Handle save (add/edit)
+  const handleSaveProduct = async (productData) => {
+    if (editProduct) {
+      // If editing, update product
+      await firebaseInstance.updateProduct(editProduct.id, productData);
+    } else {
+      // If adding, add a new product
+      await firebaseInstance.addProduct(productData);
+    }
+    await getProducts(); // Refresh products list
+    setModalOpen(false); // Close the modal
+  };
+
   const columns = React.useMemo(
     () => [
       {
         Header: "Image",
-        accessor: "Image", // Accessor for the image URL
+        accessor: "Image",
         Cell: ({ row }) => (
           <img
             src={row.original.Image}
@@ -42,11 +62,11 @@ function Products() {
       },
       {
         Header: "ID",
-        accessor: "id", // Accessor corresponds to product ID
+        accessor: "id",
       },
       {
         Header: "Product Name",
-        accessor: "Name", // Accessor corresponds to product data key
+        accessor: "Name",
       },
       {
         Header: "Price",
@@ -56,41 +76,77 @@ function Products() {
         Header: "Actions",
         Cell: ({ row }) => (
           <div style={{ display: "flex", gap: "7px" }}>
-            <button style={{ cursor: "pointer", backgroundColor: "transparent", border: "none" }} onClick={() => handleEdit(row.original.id)}>Edit <i class="fa-regular fa-pen-to-square"></i></button>
-            <button style={{ cursor: "pointer", backgroundColor: "transparent", border: "none",color:"red" }} onClick={() => handleDelete(row.original.id)}>Delete <i class="fa-solid fa-trash"></i></button>
+            <button
+              style={{ cursor: "pointer", backgroundColor: "transparent", border: "none" }}
+              onClick={() => handleEdit(row.original.id)}
+            >
+              Edit <i className="fa-regular fa-pen-to-square"></i>
+            </button>
+            <button
+              style={{ cursor: "pointer", backgroundColor: "transparent", border: "none", color: "red" }}
+              onClick={() => handleDelete(row.original.id)}
+            >
+              Delete <i className="fa-solid fa-trash"></i>
+            </button>
           </div>
         ),
       },
     ],
-    []
-  ); 
-  // Use the useTable hook
+    [products]
+  );
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data: products,
     });
+
   return (
-    <section style={{backgroundColor:'white',borderRadius:'10px',margin:'15px',marginBottom:'20px',padding:'10px',paddingBottom:'20px'}} className="featured-products">
+    <section
+      style={{
+        backgroundColor: "white",
+        borderRadius: "10px",
+        margin: "15px",
+        marginBottom: "20px",
+        padding: "10px",
+        paddingBottom: "20px",
+      }}
+      className="featured-products"
+    >
       <div className="heading-container">
         <h2 className="heading">All Products</h2>
         <hr className="horizontal-rule" />
       </div>
       <div style={{ display: "flex", gap: "10px" }} className="add-new">
         <button
-          style={{ cursor: "pointer", backgroundColor: "lightgreen", border: "none",padding:'10px',borderRadius:'5px' }}
+          style={{
+            cursor: "pointer",
+            backgroundColor: "lightgreen",
+            border: "none",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
           onClick={() => {
-            navigate("/admin/add-product");
+            setEditProduct(null); // Reset edit product
+            setModalOpen(true); // Open modal for adding new product
           }}
         >
-          <i class="fa-light fa-plus"></i> Add new Product 
+          <i className="fa-light fa-plus"></i> Add new Product
         </button>
-        <button style={{ cursor: "pointer", backgroundColor: "lightblue", border: "none",padding:'10px',borderRadius:'5px' }} onClick={getProducts}>
-          <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+        <button
+          style={{
+            cursor: "pointer",
+            backgroundColor: "lightblue",
+            border: "none",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+          onClick={getProducts}
+        >
+          <i className="fa-solid fa-arrow-rotate-right"></i> Refresh
         </button>
       </div>
       <div className="product-table">
-        {/* Render table */}
         <table {...getTableProps()} style={{ width: "100%" }}>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -98,7 +154,11 @@ function Products() {
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps()}
-                    style={{ borderBottom: "1px solid black", padding: "10px", textAlign: "left" }}
+                    style={{
+                      borderBottom: "1px solid black",
+                      padding: "10px",
+                      textAlign: "left",
+                    }}
                   >
                     {column.render("Header")}
                   </th>
@@ -114,7 +174,10 @@ function Products() {
                   {row.cells.map((cell) => (
                     <td
                       {...cell.getCellProps()}
-                      style={{ padding: "10px", borderBottom: "1px solid black" }}
+                      style={{
+                        padding: "10px",
+                        borderBottom: "1px solid black",
+                      }}
                     >
                       {cell.render("Cell")}
                     </td>
@@ -125,6 +188,16 @@ function Products() {
           </tbody>
         </table>
       </div>
+
+      {/* Render the modal for adding/editing products */}
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={() => {setModalOpen(false) 
+          setEditProduct(null)
+        }}
+        onSave={handleSaveProduct}
+        product={editProduct}
+      />
     </section>
   );
 }

@@ -35,8 +35,8 @@ function Signup() {
     // Handle form submission
     firebaseInstance.createAccount( formData.email, formData.password ).catch((err)=>{
       setError("Email already exists");
-    }).then(async (userCredential)=>{
-      const user = userCredential.user;
+    }).then(async (user)=>{
+      console.log(user);
       await updateProfile(user,{displayName:formData.name});
       sendEmailVerification(firebaseInstance.auth.currentUser);
     })

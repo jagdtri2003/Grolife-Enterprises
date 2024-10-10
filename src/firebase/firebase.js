@@ -34,8 +34,7 @@ class Firebase {
         phoneNumber: '',
         createdAt: new Date(),
       });
-
-      console.log('User signed up and document created in Firestore');
+      return user;
     } catch (error) {
       console.error('Error creating account:', error.message);
       throw error;
@@ -200,6 +199,27 @@ class Firebase {
     }
   };  
 
+  // Example Firebase methods
+  addProduct = async (productData) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let id;
+      id = characters[Math.floor(Math.random() * 26)];
+      // Generate the remaining 9 characters (can be letters or numbers)
+      for (let i = 0; i < 9; i++) {
+        id += characters[Math.floor(Math.random() * characters.length)];
+      }
+    await setDoc(doc(this.db, "products", id), productData);
+  };
+
+  updateProduct = async(productId, productData) => {
+    // Update logic in Firebase
+    await updateDoc(doc(this.db, "products", productId), productData);
+  }; 
+  
+  // editProduct = (id, updates) =>
+  //   updateDoc(doc(this.db, "products", id), updates);
+
+
   searchProducts = (searchKey) => {
     let didTimeout = false;
 
@@ -268,8 +288,8 @@ class Firebase {
       limit(itemsCount)
     );
 
-  addProduct = (id, product) =>
-    setDoc(doc(this.db, "products", id), product);
+  // addProduct = (id, product) =>
+  //   setDoc(doc(this.db, "products", id), product);
 
   generateKey = () => doc(this.db, "products").id;
 

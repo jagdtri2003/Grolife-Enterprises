@@ -20,6 +20,8 @@ const UserProfile =  ({ user }) => {
         });
         setOrders(firebaseOrders);
         localStorage.setItem('orders', JSON.stringify(firebaseOrders));
+      }else{
+        setOrders([]);
       }
     });
   }, [user.uid]);
