@@ -1,0 +1,103 @@
+.heading-container {/* Create a positioned context for the hr */
+    display: flex;
+    align-items: center;
+  }
+  
+  .heading {
+    margin-left: 5px; 
+    padding-right: 10px; /* Add some space between the heading and the hr */
+}
+  
+  .horizontal-rule {
+    margin-bottom: 5px ;
+    margin-right: 10px; 
+    flex: 1; /* Allows the hr to fill the remaining space */
+    border: none; /* Remove default border */
+    border-top: 2px solid black; /* Add custom border */
+  }
+
+
+.product-carousel{
+    margin: auto 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.product-carousel :last-child{
+    justify-content: flex-start;
+}
+
+.product-card{
+    text-decoration: none;
+    margin: 2px;
+    border-radius: 10px;
+    flex: 1 1 24%; /* Flex-grow, flex-shrink, flex-basis */
+    max-width: 24%;
+    box-sizing: border-box;
+}
+
+.product-card img:hover {
+    transform: translateY(-3px); /* Slight lift on hover */
+}
+
+
+.product-card img{
+    transition: transform 0.2s;
+    border-radius: 10px;
+    width: 100%;
+    height:auto; /* Set a fixed height */
+    object-fit: cover; 
+    aspect-ratio: 3/2;
+}
+
+.discount-per{
+    background-color: rgb(187, 10, 10);
+    padding: 4px;
+    color:rgb(252, 252, 252);
+    border-radius: 5px;
+}
+.discount{
+    color: rgb(187, 10, 10);
+    margin : 5px ; 
+}
+
+.cat-name {
+    text-transform: uppercase;
+    margin: 2% auto;
+    letter-spacing: 2px;
+}
+
+.shop-now{
+    text-decoration: none;
+    margin: 4% auto;
+    background-color: rgb(35, 35, 35);
+    border: none;
+    color: antiquewhite;
+    padding: 3% 5%;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+@media (width <= 1040px){
+    .product-card {
+        flex: 1 1 32% ;
+        max-width: 32%;
+    }
+}
+
+@media (width <= 768px) {
+    .product-card {
+        flex: 1 1 49%; /* Adjust the flex-basis for smaller screens */
+        max-width: 49%;
+    }
+}
+
+@media (width<= 480px) {
+    .product-card {
+        flex: 1 1 95%; /* Full width for very small screens */
+        max-width: 95%;
+    }
+}
+

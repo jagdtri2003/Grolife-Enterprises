@@ -1,0 +1,10 @@
+@media  (min-width:1000px){
+  .slider-img{
+    height: 45vh !important;
+  }
+}
+@media only screen and (width >= 1200px){
+  .slider-img{
+    height: 60vh !important;
+  }
+}
