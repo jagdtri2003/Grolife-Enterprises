@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import firebaseInstance from "../../firebase/firebase";
 import { useTable } from "react-table"; 
+import { useNavigate } from "react-router-dom";
 function Products() {
     const [products,setProducts] = useState([]);
     const getProducts = async ()=>{
@@ -10,6 +11,7 @@ function Products() {
     useEffect(()=>{
         getProducts();
     },[])  
+    const navigate = useNavigate();
   // Handle edit product
   const handleEdit = (productId) => {
     console.log("Editing product with ID:", productId);
@@ -34,7 +36,7 @@ function Products() {
           <img
             src={row.original.Image}
             alt={row.original.Name}
-            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+            style={{ width: "60px", height: "60px", objectFit: "cover" }}
           />
         ),
       },
@@ -73,6 +75,19 @@ function Products() {
       <div className="heading-container">
         <h2 className="heading">All Products</h2>
         <hr className="horizontal-rule" />
+      </div>
+      <div style={{ display: "flex", gap: "10px" }} className="add-new">
+        <button
+          style={{ cursor: "pointer", backgroundColor: "lightgreen", border: "none",padding:'10px',borderRadius:'5px' }}
+          onClick={() => {
+            navigate("/admin/add-product");
+          }}
+        >
+          <i class="fa-light fa-plus"></i> Add new Product 
+        </button>
+        <button style={{ cursor: "pointer", backgroundColor: "lightblue", border: "none",padding:'10px',borderRadius:'5px' }} onClick={getProducts}>
+          <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+        </button>
       </div>
       <div className="product-table">
         {/* Render table */}
