@@ -183,58 +183,22 @@ class Firebase {
 
   getSingleProduct = (id) => getDoc(doc(this.db, "products", id));
 
-  getProducts = (lastRefKey) => {
-    let didTimeout = false;
+  fetchProducts = async () => {
+    try {
+      const productsCollection = collection(this.db, "products");
+  
+      const productsSnapshot = await getDocs(productsCollection);
 
-    return new Promise((resolve, reject) => {
-      (async () => {
-        if (lastRefKey) {
-          try {
-            const q = query(collection(this.db, "products"),
-              orderBy("id"),
-              startAfter(lastRefKey),
-              limit(12)
-            );
-
-            const snapshot = await getDoc(q);
-            const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const lastKey = snapshot.docs[snapshot.docs.length - 1];
-
-            resolve({ products, lastKey });
-          } catch (e) {
-            reject(e?.message || "Failed to fetch products.");
-          }
-        } else {
-          const timeout = setTimeout(() => {
-            didTimeout = true;
-            reject(new Error("Request timeout, please try again"));
-          }, 15000);
-
-          try {
-            const totalQuery = await getDoc(collection(this.db, "products"));
-            const total = totalQuery.docs.length;
-            const q = query(collection(this.db, "products"),
-              orderBy("id"),
-              limit(12)
-            );
-
-            const snapshot = await getDoc(q);
-
-            clearTimeout(timeout);
-            if (!didTimeout) {
-              const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-              const lastKey = snapshot.docs[snapshot.docs.length - 1];
-
-              resolve({ products, lastKey, total });
-            }
-          } catch (e) {
-            if (didTimeout) return;
-            reject(e?.message || "Failed to fetch products.");
-          }
-        }
-      })();
-    });
-  };
+      const productsList = productsSnapshot.docs.map((doc) => ({
+        id: doc.id,        // Product ID
+        ...doc.data()      // Product data
+      }));
+  
+      return productsList;
+    } catch (error) {
+      console.error("Error fetching products: ", error);
+    }
+  };  
 
   searchProducts = (searchKey) => {
     let didTimeout = false;

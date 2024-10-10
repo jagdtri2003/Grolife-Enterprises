@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import "../style/login.css";
-import {  Link } from "react-router-dom";
+import { Link,useNavigate, useLocation } from "react-router-dom";
 import firebaseInstance from "../firebase/firebase";
 import googleImg from "../images/google.png";
 import ReCAPTCHA from "react-google-recaptcha"
 
 function Login() {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/';
+
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -16,6 +22,7 @@ function Login() {
   const handleGoogleSignIn = () => {
     firebaseInstance.signInWithGoogle().then((result) => {
       console.log(result);
+      navigate(from, { replace: true });
     }).catch((error) => {
       console.error(error);
     });
@@ -34,12 +41,13 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
-    firebaseInstance.signIn( formData.email, formData.password ).catch((err)=>{
+    firebaseInstance.signIn( formData.email, formData.password ).then((user)=>{
+      navigate(from, { replace: true });
+    }).catch((err)=>{
       if(err.message.toLowerCase().includes('user-disabled')){
         setError("Account Disabled! Contact Admin ")
       }else{
         setError("Invalid Email ID or Password !");
-
       }
     })
   };
