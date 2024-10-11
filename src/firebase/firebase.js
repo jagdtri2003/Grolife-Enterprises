@@ -122,6 +122,24 @@ class Firebase {
       );
     });
   };
+  uploadProductPic = (file,id) => {
+    const fileRef = ref(this.storage, `productPictures/${id}`);
+    return new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(fileRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            resolve(url);
+          });
+        }
+      );
+    });
+  };
 
   getAllOrderHistory = async () => {
     const orderRef = collection(this.db, "orders");
