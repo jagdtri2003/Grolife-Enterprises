@@ -5,6 +5,7 @@ import Header from "./Header";
 import { CartContext } from "../context/CartContex";
 import { handlePayment } from "../services/payment";
 import { failToast } from "./ToastComponent";
+import AddressModal from "./AdressModal";
 
 const CartItem = ({ item, onRemove }) => (
   <div className="cart-item">
@@ -47,7 +48,7 @@ const Cart = ({user}) => {
   const { cartItems, setCartItems } = useContext(CartContext);
 
   const navigate = useNavigate();
-
+  const [isModalOpen, setModalOpen] = useState(false);
   const [discount, setDiscount] = useState(null);
   const [promoCode, setPromoCode] = useState("");
   const [totalAmount, setTotalAmount] = useState(() => {
@@ -84,9 +85,14 @@ const Cart = ({user}) => {
         failToast("Please login to continue");
         navigate("/login");
       }else{
-        handlePayment(discount ? (totalAmount*100)-(discount.toFixed(2)*100) : totalAmount * 100,cartItems,setCartItems)
+        // handlePayment(discount ? (totalAmount*100)-(discount.toFixed(2)*100) : totalAmount * 100,cartItems,setCartItems)
+        setModalOpen(true);
       }
   }
+  const handleAddressSubmit = ({ address, phoneNumber }) => {
+    // Process payment with address and phone number
+    handlePayment(discount ? (totalAmount * 100) - (discount.toFixed(2) * 100) : totalAmount * 100, cartItems, setCartItems, address, phoneNumber);
+  };
 
   return (
     <>
@@ -138,24 +144,17 @@ const Cart = ({user}) => {
                   <p>Total: ₹ {discount ? totalAmount.toFixed(2)-discount.toFixed(2) : totalAmount.toFixed(2)}</p> 
                   <p>(Inclusive of tax ₹ 0.00)</p>
                   <button onClick={handleCheckout}
-                     className="checkout-button">CHECKOUT</button>
+                     className="checkout-button">PLACE ORDER</button>
                 </div>
               </div>
-            </div>
-            <div className="promo-code">
-              <h3>Promotion code?</h3>
-              <br/>
-              <input id="promo-code"
-                type="text"
-                placeholder="Enter coupon code"
-              />
-              <button className="apply-button" onClick={handleApplyPromoCode}>
-                Apply
-              </button>
             </div>
           </>
         )}
       </div>
+      <AddressModal 
+          isOpen={isModalOpen} 
+          onClose={() => setModalOpen(false)} 
+          onSubmit={handleAddressSubmit} />
     </>
   );
 };

@@ -16,10 +16,12 @@ const UserProfile =  ({ user }) => {
       if (!querySnapshot.empty) {
         const firebaseOrders = [];
         querySnapshot.forEach((doc) => {
-          firebaseOrders.push(doc.data());
+          
+          firebaseOrders.push({ ...doc.data(), id: doc.id });
         });
         setOrders(firebaseOrders);
         localStorage.setItem('orders', JSON.stringify(firebaseOrders));
+        console.log(firebaseOrders)
       }else{
         setOrders([]);
         localStorage.setItem('orders', JSON.stringify([]));
@@ -71,15 +73,16 @@ const UserProfile =  ({ user }) => {
       <p>Email: {user.email} {  !user.emailVerified && (<i title='Email not Verified !' style={{color:'red'}} class="fa-regular fa-circle-exclamation"></i>)} </p>
       </div>
       </div>
-      <div className="order-history">
+      <div className="order-history" >
         <h2>Order History</h2>
         {orders.length > 0 ? (
           <ul>
             {orders.map((order) => (
               <li key={order.paymentId}>
-                <p>Order ID: {order.paymentId.slice(4)}</p>
+                <p>Order ID: {order.id}</p>
                 <p>Date: {order.date}</p>
                 <p>Total: ₹ {order.total}</p>
+                <p>Status: <span style={{color: order.status === 'Delivered' ? 'green' : order.status === 'Cancelled' ? 'red' : 'grey',fontWeight:'bold'}}>{order.status}</span> </p>
               </li>
             ))}
           </ul>

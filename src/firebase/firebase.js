@@ -95,7 +95,7 @@ class Firebase {
   // Get Order History
   getOrderHistory = (uid) => {
     const orderRef = collection(this.db, "orders");
-    const q = query(orderRef, where("id", "==", uid), orderBy("date")
+    const q = query(orderRef, where("ordId", "==", uid), orderBy("date")
     );
     return getDocs(q);
   };
@@ -123,6 +123,22 @@ class Firebase {
     });
   };
 
+  getAllOrderHistory = async () => {
+    const orderRef = collection(this.db, "orders");
+    const q = query(orderRef, orderBy("date"));
+
+    const querySnapshot = await getDocs(q);
+    const orders = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      userId: doc.data().id,
+      ...doc.data(),
+    }));
+    return orders;
+  }; 
+  updateOrderStatus = (orderId, newStatus) => {
+    const orderRef = doc(this.db, "orders", orderId);
+    return updateDoc(orderRef, { status: newStatus });
+  };
 
   passwordUpdate = (password) => updatePassword(this.auth.currentUser, password);
 

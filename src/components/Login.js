@@ -105,7 +105,7 @@ function Login() {
           </div>
           {error && <div className="error-message">{error}</div>}
           {msg && <div className="msg-message">{msg}</div>}
-          {<ReCAPTCHA sitekey="6LcH4F0qAAAAAE1mlfpz1m-0yrY1wSPvgQyh6YvG"/>}
+          {<ReCAPTCHA sitekey="6Ldj1l4qAAAAAJR1oGtkGMTLe42zhSz-f0d4EkFP"/>}
           <br/>
           <button type="submit" className="sign-in-btn">
             SIGN IN
