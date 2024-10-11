@@ -37,9 +37,12 @@ function AdminPanel() {
     authorised ? <>
       <div className="admin-panel">
         <h1 style={{padding:'10px'}}> <Link to={"/"} style={{textDecoration:'none',color:'inherit',fontWeight:'bold'}}>Grolife Enterprises</Link> - Admin Panel</h1>
-      </div>    
-      <Products/>
-      <Orders/>
+      </div> 
+      <div>
+        <Products/>
+        <Orders/>
+      <div style={{minHeight:'10px'}}></div>
+      </div>   
     </> : <div style={{height:'100vh',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}} >
       <h1 style={{color:'red',marginBottom:'-16px'}}>Unauthorized Access</h1>
       <p style={{color:'red'}}>Only Admins can access this page</p>

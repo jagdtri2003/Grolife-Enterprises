@@ -109,8 +109,11 @@ const Orders = () => {
   } = tableInstance;
 
   return (
-    <section style={{ backgroundColor: 'white', borderRadius: '10px', margin: '15px', padding: '20px' }}>
-      <h2>Orders</h2>
+    <section style={{ backgroundColor: 'white', borderRadius: '10px', margin: '15px', padding: '20px',marginBottom:'40px'}}>
+      <div className="heading-container">
+        <h2 className="heading">Orders</h2>
+        <hr className="horizontal-rule" />
+      </div>
       {loading ? <p>Loading orders...</p> : (
         <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
           <thead>
