@@ -36,7 +36,7 @@ function AdminPanel() {
   return (
     authorised ? <>
       <div className="admin-panel">
-        <h1 style={{padding:'10px'}}>Grolife Enterprises - Admin Panel</h1>
+        <h1 style={{padding:'10px'}}> <Link to={"/"} style={{textDecoration:'none',color:'inherit',fontWeight:'bold'}}>Grolife Enterprises</Link> - Admin Panel</h1>
       </div>    
       <Products/>
       <Orders/>

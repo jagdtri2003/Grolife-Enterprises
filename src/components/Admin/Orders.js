@@ -40,12 +40,16 @@ const Orders = () => {
   const columns = useMemo(
     () => [
       {
+        Header: 'Order ID',
+        accessor: 'id',
+      },
+      {
         Header: 'Customer Name',
         accessor: 'name', // accessor is the key from the order object
       },
       {
         Header: 'Items',
-        accessor: 'items', // This will show a list of items in an order
+        accessor: 'items',
         Cell: ({ value }) => (
           <ul style={{ padding: 0 }}>
             {value.map((item, index) => (
@@ -62,6 +66,10 @@ const Orders = () => {
       {
         Header: 'Date',
         accessor: 'date', // Date when the order was placed
+      },
+      {
+        Header: 'Phone Number',
+        accessor: 'phoneNumber', // Phone number of the customer
       },
       {
         Header: 'Address',
