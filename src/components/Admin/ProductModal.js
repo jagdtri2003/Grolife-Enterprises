@@ -78,7 +78,7 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isLoading}
-            style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+            style={{ width: "96%", padding: "8px", marginBottom: "10px" }}
           />
         </div>
         <div style={{ marginBottom: "10px" }}>
@@ -88,7 +88,7 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             disabled={isLoading}
-            style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+            style={{ width: "96%", padding: "8px", marginBottom: "10px" }}
           />
         </div>
         <div style={{ marginBottom: "10px" }}>
@@ -98,7 +98,7 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
             value={image} 
             onChange={(e) => setImage(e.target.value)}
             disabled={isLoading}
-            style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+            style={{ width: "96%", padding: "8px", marginBottom: "10px" }}
           />
           <input
             type="file"
@@ -117,7 +117,7 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
             name="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+            style={{ width: "96%", padding: "8px", marginBottom: "10px" }}
             disabled={isLoading}
           />
         </div>
