@@ -8,6 +8,7 @@ import product from "../products/products.js";
 import Footer from "./Footer.js";
 import StarRatings from "react-star-ratings";
 import Skeleton from 'react-loading-skeleton';
+import firebaseInstance from "../firebase/firebase.js";
 
 const ItemComponent = () => {
   useEffect(() => {
@@ -38,16 +39,11 @@ const ItemComponent = () => {
       setLoading(false);
       return;
     }
-    const url = 'https://test-axios-iota.vercel.app/api/?asin='+id;
-    const response = await fetch(url);
-    if (!response.ok) {
-      failToast("Something went wrong!! Please Wait !");
-      fetchProduct();
-      return;
-    }
-    const responseJson = await response.json();
-    localStorage.setItem(id, JSON.stringify(responseJson));
-    setItem(responseJson);
+    const response = await firebaseInstance.getSingleProduct(id);
+    const productItem = response.data();
+    productItem["discountPrice"] = parseFloat(productItem["Price"]) + parseFloat(Math.round(Math.random() * 10));
+    localStorage.setItem(id, JSON.stringify(productItem));
+    setItem(productItem);
     setLoading(false);
 };
   const handleAddToCart = (e) => {
@@ -56,12 +52,12 @@ const ItemComponent = () => {
       id,
       {
         id,
-        name: item.name,
+        name: item.Name,
         quantity: count,
         sku: `Sku-${id}`,
         added : new Date().toString().slice(0,15),
-        price: item.price,
-        image: item.image,
+        price: item.Price,
+        image: item.Image,
       },
       count
     );
@@ -78,11 +74,11 @@ const ItemComponent = () => {
       </div>
       <div style={{ margin: "30px" }} className="item-container">
         <div className="item-image">
-          {loading ? <Skeleton width={400} height={400} /> : <img style={{ marginTop: "30px" }} src={item.image} alt={item.name} />}
+          {loading ? <Skeleton width={400} height={400} /> : <img style={{ marginTop: "30px" }} src={item.Image} alt={item.Name} />}
           <br />
         </div>
         <div className="item-details">
-          {loading ? <Skeleton height={35} style={{marginBottom:'4vh'}} count={6} /> :<> <h2 className="item-name">{item.name}</h2>
+          {loading ? <Skeleton height={35} style={{marginBottom:'4vh'}} count={6} /> :<> <h2 className="item-name">{item.Name}</h2>
           <p>
             <strong>SKU ID:</strong> Sku-{id} &nbsp; &nbsp;
           </p>
@@ -92,12 +88,12 @@ const ItemComponent = () => {
               starRatedColor="orange"
               starDimension="20px"
               starSpacing="5px"
-            /> &nbsp; &nbsp; ( {item.reviews || 100 + Math.round(Math.random() * 100)} ratings)
+            /> &nbsp; &nbsp;
           </p>
           <div className="item-price">
-          <span style={{color:'red',fontSize:'20px'}}>{- (((parseInt(item.discountPrice.slice(1))-parseInt(item.price))/parseInt(item.discountPrice.slice(1)))*100).toFixed(0)}%  &nbsp;</span> 
+          <span style={{color:'red',fontSize:'20px'}}>{- (((parseInt(item.discountPrice)-parseInt(item.Price))/parseInt(item.discountPrice))*100).toFixed(0)}%  &nbsp;</span> 
             <span className="price">
-              ₹{item.price} </span>
+              ₹{item.Price} </span>
           </div>
           <div style={{marginTop:'-8px',fontSize:'15px'}}>
           M.R.P : 
@@ -112,14 +108,6 @@ const ItemComponent = () => {
           <button onClick={handleAddToCart} className="add-to-cart">
             Add to Cart
           </button>
-          <p className="item-specifications">
-            { item.specifications === undefined ? <ul>
-              {item.description.map((spec, index) => (
-                <li key={index}>{spec}</li>
-              ))}
-            </ul>
-            : item.specifications }
-          </p>
           </>}
         </div>
       </div>

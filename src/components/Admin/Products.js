@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import firebaseInstance from "../../firebase/firebase";
 import { useTable } from "react-table";
 import ProductModal from "./ProductModal"; // Import the modal component
+import { confirmAlert } from 'react-confirm-alert'; // Import the confirmation library
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import default styles
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -29,9 +31,29 @@ function Products() {
   };
 
   // Handle delete product
-  const handleDelete = async (productId) => {
-    await firebaseInstance.deleteProduct(productId);
-    getProducts();
+  const handleDelete = (productId) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this product?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            try {
+              await firebaseInstance.removeProduct(productId); // Wait for deletion
+              console.log("Product deleted successfully.");
+              await getProducts(); // Refresh product list
+            } catch (error) {
+              console.error("Error deleting product: ", error);
+            }
+          }
+        },
+        {
+          label: "No",
+          onClick: () => console.log("Deletion cancelled")
+        }
+      ]
+    });
   };
 
   // Handle save (add/edit)
@@ -71,6 +93,11 @@ function Products() {
       {
         Header: "Price",
         accessor: "Price",
+        Cell: ({ value }) => (
+          <>
+            ₹{new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(value)}
+          </>
+        ),        
       },
       {
         Header: "Actions",

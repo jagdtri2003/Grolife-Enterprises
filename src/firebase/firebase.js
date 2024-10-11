@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signOut, sendPasswordResetEmail, updatePassword, updateEmail, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc,getDocs, getDoc, updateDoc, orderBy, startAfter, limit, query, where } from "firebase/firestore";
+import { getFirestore, collection, doc, setDoc,getDocs, getDoc, updateDoc, orderBy, startAfter, limit, query, where,deleteDoc } from "firebase/firestore";
 import { getStorage, ref, deleteObject,getDownloadURL,uploadBytesResumable } from "firebase/storage";
 import {getAnalytics,logEvent} from "firebase/analytics";
 import firebaseConfig from "./config";
@@ -205,7 +205,7 @@ class Firebase {
     let id;
       id = characters[Math.floor(Math.random() * 26)];
       // Generate the remaining 9 characters (can be letters or numbers)
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 15; i++) {
         id += characters[Math.floor(Math.random() * characters.length)];
       }
     await setDoc(doc(this.db, "products", id), productData);
@@ -215,81 +215,53 @@ class Firebase {
     // Update logic in Firebase
     await updateDoc(doc(this.db, "products", productId), productData);
   }; 
+
+  searchProductByKey = async (key, value) => {
+    try {
+      // Create the Firestore query based on the key and value
+      const q = query(
+        collection(this.db, "products"),
+        where(key, "==", value)
+      );
   
-  // editProduct = (id, updates) =>
-  //   updateDoc(doc(this.db, "products", id), updates);
-
-
-  searchProducts = (searchKey) => {
-    let didTimeout = false;
-
-    return new Promise((resolve, reject) => {
-      (async () => {
-        const productsRef = collection(this.db, "products");
-
-        const timeout = setTimeout(() => {
-          didTimeout = true;
-          reject(new Error("Request timeout, please try again"));
-        }, 15000);
-
-        try {
-          const searchedNameRef = query(productsRef,
-            orderBy("name_lower"),
-            where("name_lower", ">=", searchKey),
-            where("name_lower", "<=", `${searchKey}\uf8ff`),
-            limit(12)
-          );
-          const searchedKeywordsRef = query(productsRef,
-            orderBy("dateAdded", "desc"),
-            where("keywords", "array-contains-any", searchKey.split(" ")),
-            limit(12)
-          );
-
-          const [nameSnaps, keywordsSnaps] = await Promise.all([
-            getDoc(searchedNameRef),
-            getDoc(searchedKeywordsRef)
-          ]);
-
-          clearTimeout(timeout);
-          if (!didTimeout) {
-            const searchedNameProducts = nameSnaps.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const searchedKeywordsProducts = keywordsSnaps.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-            // MERGE PRODUCTS
-            const mergedProducts = [
-              ...searchedNameProducts,
-              ...searchedKeywordsProducts,
-            ];
-            const hash = {};
-
-            mergedProducts.forEach((product) => {
-              hash[product.id] = product;
-            });
-
-            resolve({ products: Object.values(hash) });
-          }
-        } catch (e) {
-          if (didTimeout) return;
-          reject(e);
-        }
-      })();
-    });
+      // Fetch the documents matching the query
+      const querySnapshot = await getDocs(q);
+  
+      // Extract and return the product data
+      const products = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+  
+      return products; // Return the matching products
+    } catch (error) {
+      console.error("Error searching for product: ", error);
+      return [];
+    }
   };
 
-  getFeaturedProducts = (itemsCount = 12) =>
-    query(collection(this.db, "products"),
-      where("isFeatured", "==", true),
-      limit(itemsCount)
-    );
+  getFeaturedProducts = async (itemsCount = 12) => {
+    try {
+      // Create the Firestore query
+      const q = query(
+        collection(this.db, "products"),
+        where("Featured", "==", true),
+        limit(itemsCount)
+      );
+      const querySnapshot = await getDocs(q);
+      const imageList = querySnapshot.docs.map(doc => [doc.data().Image,doc.id]);
+      return imageList; 
+    } catch (error) {
+      console.error("Error fetching featured products: ", error);
+      return [];
+    }
+  };
 
   getRecommendedProducts = (itemsCount = 12) =>
     query(collection(this.db, "products"),
       where("isRecommended", "==", true),
       limit(itemsCount)
     );
-
-  // addProduct = (id, product) =>
-  //   setDoc(doc(this.db, "products", id), product);
 
   generateKey = () => doc(this.db, "products").id;
 
@@ -305,7 +277,15 @@ class Firebase {
   editProduct = (id, updates) =>
     updateDoc(doc(this.db, "products", id), updates);
 
-  removeProduct = (id) => deleteObject(doc(this.db, "products", id));
+  // Remove a product by its ID
+  removeProduct = async (id) => {
+    try {
+      deleteDoc(doc(this.db, "products", id));
+      console.log(`Product with ID ${id} has been removed.`);
+    } catch (error) {
+      console.error("Error removing product: ", error);
+    }
+  };
 }
 
 const firebaseInstance = new Firebase();

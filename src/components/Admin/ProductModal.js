@@ -10,6 +10,11 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
   const handleSubmit = () => {
     const productData = { Name: name, Price: price, Image: image, Category: category, Featured: featured };
     onSave(productData);
+    setName("")
+    setPrice("")
+    setImage("")
+    setCategory("")
+    setFeatured(false)
   };
 
   useEffect(() => {
@@ -83,10 +88,10 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
           </label>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <button onClick={onClose} style={{ padding: "10px", backgroundColor: "red", color: "white", border: "none", borderRadius: "5px" }}>
+          <button onClick={onClose} style={{cursor: "pointer", padding: "10px", backgroundColor: "red", color: "white", border: "none", borderRadius: "5px" }}>
             Cancel
           </button>
-          <button onClick={handleSubmit} style={{ padding: "10px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px" }}>
+          <button onClick={handleSubmit} style={{ cursor: "pointer",padding: "10px", backgroundColor: "green", color: "white", border: "none", borderRadius: "5px" }}>
             {product ? "Save Changes" : "Add Product"}
           </button>
         </div>
