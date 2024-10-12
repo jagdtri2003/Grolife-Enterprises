@@ -6,6 +6,7 @@ import Orders from './Orders';
 function AdminPanel() {
   const [authorised, setAuthorised] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const checkRole = async () => {
@@ -26,6 +27,27 @@ function AdminPanel() {
       checkRole();
     }
   },[])
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1000);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  if (isSmallScreen) {
+    return (
+      <div className='centered-container'>
+        <div style={{ color: 'red', fontSize: '25px' }}>
+          This page is best viewed on a Larger Screen<br />
+          Please open this page on a Larger Screen
+        </div>
+      </div>
+    );
+  }
   if (loading) {
     return(
       <div className='centered-container'>

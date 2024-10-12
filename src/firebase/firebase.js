@@ -34,7 +34,67 @@ class Firebase {
       console.error('Error creating account:', error.message);
       throw error;
     }
-  };  
+  };
+  searchProducts = async (searchKey) => {
+    let didTimeout = false;
+
+    return new Promise((resolve, reject) => {
+      (async () => {
+        const productsRef = collection(this.db, "products");
+
+        const timeout = setTimeout(() => {
+          didTimeout = true;
+          reject(new Error("Request timeout, please try again"));
+        }, 15000);
+
+        try {
+          const searchedNameRef = query(productsRef,
+            orderBy("Name"),
+            where("Name", ">=", searchKey),
+            where("Name", "<=", `${searchKey}\uf8ff`),
+            limit(12)
+          );
+          const categoryQuery = query(
+            productsRef, 
+            where('Category', '>=', searchKey), 
+            where('Category', '<=', searchKey + '\uf8ff')
+          );
+
+          const [nameSnaps, keywordsSnaps] = await Promise.all([
+            getDocs(searchedNameRef),
+            getDocs(categoryQuery)
+          ]);
+
+          clearTimeout(timeout);
+          if (!didTimeout) {
+            const searchedNameProducts = nameSnaps.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const searchedKeywordsProducts = keywordsSnaps.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // MERGE PRODUCTS
+            const mergedProducts = [
+              ...searchedNameProducts,
+              ...searchedKeywordsProducts,
+            ];
+          // Use a hash to remove duplicates by id
+          const uniqueProducts = [];
+          const hash = {};
+
+          mergedProducts.forEach((product) => {
+            if (!hash[product.id]) {
+              hash[product.id] = true;  // Mark as seen
+              uniqueProducts.push(product);  // Add unique product to array
+            }
+          });
+          resolve(uniqueProducts);  
+          }
+        } catch (e) {
+          if (didTimeout) return;
+          reject(e);
+        }
+      })();
+    });
+  };
+
 
   signIn = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password);

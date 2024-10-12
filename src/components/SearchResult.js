@@ -5,25 +5,20 @@ import ProductCard from "./ProductCard";
 import Footer from "./Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { failToast } from "./ToastComponent";
-import ReactPaginate from "react-paginate";
 import '../style/pagination.css';
 import { setItemTillMidnight, getItemWithExpiry } from "../util/localStorage";
+import firebaseInstance from "../firebase/firebase";
 
 function SearchResult() {
-
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get("q");
-  const page = searchParams.get("page") || 1; 
-
   const [sortCriteria, setSortCriteria] = useState("None");
   const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(localStorage.getItem("totalPages-"+query.toLowerCase()) || 1);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -31,26 +26,18 @@ function SearchResult() {
       setLoading(true);
       setProducts([]); // Clear previous products
       setSortedProducts([]); // Clear previous sorted products
-      if (getItemWithExpiry(query.toLowerCase()+page)) {
-        setProducts(JSON.parse(getItemWithExpiry(query.toLowerCase()+page)));
-        setSortedProducts(JSON.parse(getItemWithExpiry(query.toLowerCase()+page)));
+      if (getItemWithExpiry(query.toLowerCase())) {
+        setProducts(JSON.parse(getItemWithExpiry(query.toLowerCase())));
+        setSortedProducts(JSON.parse(getItemWithExpiry(query.toLowerCase())));
         setLoading(false);
         return;
       }
       try {
-        const url = `https://test-axios-iota.vercel.app/search/?q=${query}`;
-        const response = await fetch(url);
-        const temp = await response.json();
-        if (response.status !== 200) {
-          failToast("Something went wrong!! Please Wait !");
-          fetchProducts();
-          return;
-        }
-        setTotalPages(temp.pages);
-        localStorage.setItem("totalPages-"+query.toLowerCase(), temp.pages);
-        setItemTillMidnight(query.toLowerCase()+page, JSON.stringify(temp.item));
-        setProducts(temp.item);
-        setSortedProducts(temp.item);
+        const product = await firebaseInstance.searchProducts(query);
+        console.log(product);
+        setItemTillMidnight(query.toLowerCase(), JSON.stringify(product));
+        setProducts(product);
+        setSortedProducts(product);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -58,7 +45,7 @@ function SearchResult() {
       }
     };
     fetchProducts();
-  }, [query,page]);
+  }, [query]);
 
   useEffect(() => {
     let sorted = [...products];
@@ -83,23 +70,6 @@ function SearchResult() {
   const handleSortChange = (e) => {
     setSortCriteria(e.target.value);
   };
-
-  function updateLinkText() {
-    try{
-      if (window.innerWidth <= 650) {
-        document.querySelector('.prev-item a').textContent = '<';
-        document.querySelector('.next-item a').textContent = '>';
-      } else {
-        document.querySelector('.prev-item a').textContent = '< Previous';
-        document.querySelector('.next-item a').textContent = 'Next >';
-      }
-    }catch(err){
-      console.log(err);
-    }
-  }
-  updateLinkText();
-  // Add an event listener to handle window resize
-  window.addEventListener('resize', updateLinkText);
 
   return (
     <>
@@ -153,28 +123,6 @@ function SearchResult() {
               <ProductCard key={`${product.asin}-${index}`} product={product} />
             ))}
             <br/>
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="Next >"
-              pageRangeDisplayed={3}
-              pageCount={totalPages}
-              previousLabel="< Previous"
-              onPageChange={(e) => {
-                navigate(`/search/?q=${query}&page=${e.selected + 1}`);
-              }}
-              initialPage={parseInt(page) - 1}
-              renderOnZeroPageCount={null}
-              containerClassName={'pagination'}
-              pageClassName={'page-item'}
-              pageLinkClassName={'page-link'}
-              previousClassName={'prev-item'}
-              previousLinkClassName={'prev-link'}
-              nextClassName={'next-item'}
-              nextLinkClassName={'next-link'}
-              breakClassName={'break-item'}
-              breakLinkClassName={'break-link'}
-              activeClassName={'active'}
-            />
           </div>
         ) : (
           <div

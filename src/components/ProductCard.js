@@ -16,15 +16,15 @@ function ProductCard({product}) {
 
   const handleAddToCart = (item) => {
     addToCart(
-      item.asin,
+      item.id,
       {
         id:item.asin,
-        name: item.name || item.product_title,
+        name: item.Name[0].toUpperCase()+item.Name.slice(1) || item.product_title,
         quantity: 1,
         added : new Date().toString().slice(4,15),
-        sku: `Sku-${item.asin}`,
-        price: parseInt(item.price.replaceAll(',', '')) || item.product_price,
-        image: item.image || item.product_photo,
+        sku: `Sku-${item.id}`,
+        price: parseInt(item.Price) || item.product_price,
+        image: item.Image || item.product_photo,
       },1);
     successToast("Item Added to Cart !!");
   };
@@ -34,32 +34,30 @@ function ProductCard({product}) {
     <>
     <div className="product-card2">
       <div style={{paddingLeft:'5%'}} className="product-image">
-        <img loading='lazy' src={product.image || product.product_photo} alt={product.name} />
+        <img loading='lazy' src={product.Image || product.product_photo} alt={product.Name} />
       </div>
       <div className="product-details">
-        <Link to={`/item/${product.id || product.asin}`} className="product-name">{product.name || product.product_title}</Link>
+        <Link to={`/item/${product.id || product.asin}`} className="product-name">{product.Name[0].toUpperCase()+product.Name.slice(1) || product.product_title}</Link>
         <div className="product-rating">
           <span>
           <StarRatings
-            rating={parseFloat(product.rating)}
+            rating={parseFloat(Math.random() * 5)}
             starRatedColor="orange"
             starDimension="20px"
             starSpacing="5px"
-          /> { product.reviews !=='N/A' ? `(${product.reviews} ratings)` : ''}
+          />
           </span>
           <br/><br/>
           <strong>SKU :</strong> Sku-{product.id || product.asin}
           <br/>
-          {product.deliveryText !=="N/A" && <div><strong>FREE DELIVERY</strong> {product.deliveryText}</div>}
-          {product.numberOfSales !=="N/A" && <div>{product.numberOfSales} bought in past month</div>}
         </div>
-        {limitedTimeDeal && product.price !== 'N/A' && <span className="product-deal">Limited time deal</span>}
+        {limitedTimeDeal && product.Price !== 'N/A' && <span className="product-deal">Limited time deal</span>}
         <div className="product-price">
-          { product.price !== 'N/A' ? <span className="current-price">₹{product.price}</span> : <div style={{color:'red'}}>
+          { product.Price !== 'N/A' ? <span className="current-price">₹{product.Price}</span> : <div style={{color:'red'}}>
             Currently Out of Stock
           </div> }
           { product.discountPrice !== 'N/A' && <span className="original-price">M.R.P: {product.discountPrice }</span> }
-          { product.discountPrice !== 'N/A' && <span className="discount">{((parseInt(product.discountPrice.slice(1).replace(/,/g, ''))-parseInt(product.price.replace(/,/g, '')))/(parseInt(product.discountPrice.slice(1).replace(/,/g, '')))*100).toFixed(0)}% off</span> } 
+          {/* { product.discountPrice !== 'N/A' && <span className="discount">{((parseInt(product.discountPrice.slice(1).replace(/,/g, ''))-parseInt(product.price.replace(/,/g, '')))/(parseInt(product.discountPrice.slice(1).replace(/,/g, '')))*100).toFixed(0)}% off</span> }  */}
         </div>
         <button onClick={(e)=>{
               handleAddToCart(product)
