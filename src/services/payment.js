@@ -11,6 +11,7 @@ const handlePayment = (amount, cartItems, setCartItems) => {
     address: localStorage.getItem("address"),
     phoneNumber: localStorage.getItem("phoneNumber"),
     status: "Pending",
+    timestamp : new Date(),
   });
   setCartItems([]);
   successToast("Order placed successfully");

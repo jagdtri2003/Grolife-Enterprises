@@ -35,8 +35,9 @@ function AdminPanel() {
   }
   return (
     authorised ? <>
-      <div className="admin-panel">
+      <div className="admin-panel" style={{display:'flex',gap:'50vw'}}>
         <h1 style={{padding:'10px'}}> <Link to={"/"} style={{textDecoration:'none',color:'inherit',fontWeight:'bold'}}>Grolife Enterprises</Link> - Admin Panel</h1>
+        <h3 style={{padding:'10px'}}>Welcome,<br/> {firebaseInstance.auth.currentUser.displayName}</h3>
       </div> 
       <div>
         <Products/>

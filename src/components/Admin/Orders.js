@@ -128,25 +128,25 @@ const Orders = () => {
       </div>
       <div style={{ display: 'flex', gap: '30px', marginBottom: '20px' }}>
         <button
-          style={{ backgroundColor: statusFilter === 'Pending' ? 'grey' : 'transparent', color: statusFilter === 'Pending' ? 'white' : 'black' }}
+          style={{ backgroundColor: statusFilter === 'Pending' ? 'grey' : 'transparent', color: statusFilter === 'Pending' ? 'white' : 'black',cursor: 'pointer' }}
           onClick={() => handleFilterChange('Pending')}
           className='continue-shopping-button'
         >
-          PENDING
+          <i class="fa-regular fa-clock"></i> &nbsp;PENDING
         </button>
         <button
-          style={{ backgroundColor: statusFilter === 'Delivered' ? '#4CAF50' : 'transparent', color: statusFilter === 'Delivered' ? 'white' : 'black' }}
+          style={{ backgroundColor: statusFilter === 'Delivered' ? '#4CAF50' : 'transparent', color: statusFilter === 'Delivered' ? 'white' : 'black',cursor: 'pointer' }}
           onClick={() => handleFilterChange('Delivered')}
           className='continue-shopping-button'
         >
-          DELIVERED
+          <i class="fa-solid fa-check"></i> &nbsp;DELIVERED
         </button>
         <button
-          style={{ backgroundColor: statusFilter === 'Cancelled' ? 'red' : 'transparent', color: statusFilter === 'Cancelled' ? 'white' : 'black' }}
+          style={{ backgroundColor: statusFilter === 'Cancelled' ? 'red' : 'transparent', color: statusFilter === 'Cancelled' ? 'white' : 'black',cursor: 'pointer' }}
           onClick={() => handleFilterChange('Cancelled')}
           className='continue-shopping-button'
         >
-          CANCELLED
+          <i class="fa-solid fa-xmark"></i> &nbsp;CANCELLED
         </button>
       </div>
       {loading ? <p>Loading orders...</p> : (

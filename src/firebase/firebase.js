@@ -143,7 +143,7 @@ class Firebase {
 
   getAllOrderHistory = async () => {
     const orderRef = collection(this.db, "orders");
-    const q = query(orderRef, orderBy("date", "desc"));
+    const q = query(orderRef, orderBy("timestamp", "desc"));
 
     const querySnapshot = await getDocs(q);
     const orders = querySnapshot.docs.map((doc) => ({
