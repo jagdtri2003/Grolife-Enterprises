@@ -5,6 +5,7 @@ import firebaseInstance from '../../firebase/firebase';
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState(''); // To track the status filter
 
   const getOrders = async () => {
     try {
@@ -37,6 +38,11 @@ const Orders = () => {
     }
   };
 
+  // Handle status filter change
+  const handleFilterChange = (status) => {
+    setStatusFilter(status);
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -45,7 +51,7 @@ const Orders = () => {
       },
       {
         Header: 'Customer Name',
-        accessor: 'name', // accessor is the key from the order object
+        accessor: 'name', 
       },
       {
         Header: 'Items',
@@ -96,9 +102,15 @@ const Orders = () => {
     []
   );
 
-  const data = useMemo(() => orders, [orders]);
+  // Filter orders based on the selected status filter
+  const filteredOrders = useMemo(() => {
+    if (statusFilter === '') {
+      return orders; // If no filter is selected, show all orders
+    }
+    return orders.filter(order => order.status === statusFilter);
+  }, [orders, statusFilter]);
 
-  const tableInstance = useTable({ columns, data });
+  const tableInstance = useTable({ columns, data: filteredOrders });
 
   const {
     getTableProps,
@@ -109,10 +121,33 @@ const Orders = () => {
   } = tableInstance;
 
   return (
-    <section style={{ backgroundColor: 'white', borderRadius: '10px', margin: '15px', padding: '20px',marginBottom:'40px'}}>
+    <section style={{ backgroundColor: 'white', borderRadius: '10px', margin: '15px', padding: '20px', marginBottom: '40px'}}>
       <div className="heading-container">
         <h2 className="heading">Orders</h2>
         <hr className="horizontal-rule" />
+      </div>
+      <div style={{ display: 'flex', gap: '30px', marginBottom: '20px' }}>
+        <button
+          style={{ backgroundColor: statusFilter === 'Pending' ? 'grey' : 'transparent', color: statusFilter === 'Pending' ? 'white' : 'black' }}
+          onClick={() => handleFilterChange('Pending')}
+          className='continue-shopping-button'
+        >
+          PENDING
+        </button>
+        <button
+          style={{ backgroundColor: statusFilter === 'Delivered' ? '#4CAF50' : 'transparent', color: statusFilter === 'Delivered' ? 'white' : 'black' }}
+          onClick={() => handleFilterChange('Delivered')}
+          className='continue-shopping-button'
+        >
+          DELIVERED
+        </button>
+        <button
+          style={{ backgroundColor: statusFilter === 'Cancelled' ? 'red' : 'transparent', color: statusFilter === 'Cancelled' ? 'white' : 'black' }}
+          onClick={() => handleFilterChange('Cancelled')}
+          className='continue-shopping-button'
+        >
+          CANCELLED
+        </button>
       </div>
       {loading ? <p>Loading orders...</p> : (
         <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>

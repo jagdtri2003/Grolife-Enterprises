@@ -91,6 +91,10 @@ function Products() {
         accessor: "Name",
       },
       {
+        Header: "Category",
+        accessor: "Category",
+      },
+      {
         Header: "Price",
         accessor: "Price",
         Cell: ({ value }) => (

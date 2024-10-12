@@ -107,8 +107,8 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
             style={{ marginBottom: "10px" }}
             disabled={isLoading}
           />
-          <button onClick={handleUpload} disabled={isLoading} style={{ cursor: "pointer", padding: "8px", backgroundColor: "blue", color: "white", border: "none", borderRadius: "5px" }}>
-          { isLoading ?  "Uploading Image..." : "Upload Image"}
+          <button onClick={handleUpload} disabled={isLoading} style={{ cursor: "pointer", padding: "10px", backgroundColor: "#008CFF", color: "white", border: "none", borderRadius: "5px" }}>
+          { isLoading ?  "Uploading Image..." :<> <i class="fa-regular fa-upload"/> &nbsp; Upload Image </> }
           </button>
         </div>
         <div style={{ marginBottom: "10px" }}>
