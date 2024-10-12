@@ -132,21 +132,21 @@ const Orders = () => {
           onClick={() => handleFilterChange('Pending')}
           className='continue-shopping-button'
         >
-          <i class="fa-regular fa-clock"></i> &nbsp;PENDING
+          <i className="fa-regular fa-clock"></i> &nbsp;PENDING
         </button>
         <button
           style={{ backgroundColor: statusFilter === 'Delivered' ? '#4CAF50' : 'transparent', color: statusFilter === 'Delivered' ? 'white' : 'black',cursor: 'pointer' }}
           onClick={() => handleFilterChange('Delivered')}
           className='continue-shopping-button'
         >
-          <i class="fa-solid fa-check"></i> &nbsp;DELIVERED
+          <i className="fa-solid fa-check"></i> &nbsp;DELIVERED
         </button>
         <button
           style={{ backgroundColor: statusFilter === 'Cancelled' ? 'red' : 'transparent', color: statusFilter === 'Cancelled' ? 'white' : 'black',cursor: 'pointer' }}
           onClick={() => handleFilterChange('Cancelled')}
           className='continue-shopping-button'
         >
-          <i class="fa-solid fa-xmark"></i> &nbsp;CANCELLED
+          <i className="fa-solid fa-xmark"></i> &nbsp;CANCELLED
         </button>
       </div>
       {loading ? <p>Loading orders...</p> : (

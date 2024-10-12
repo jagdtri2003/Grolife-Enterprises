@@ -1,24 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signOut, sendPasswordResetEmail, updatePassword, updateEmail, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, sendPasswordResetEmail, updatePassword, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, doc, setDoc,getDocs, getDoc, updateDoc, orderBy, startAfter, limit, query, where,deleteDoc } from "firebase/firestore";
 import { getStorage, ref, deleteObject,getDownloadURL,uploadBytesResumable } from "firebase/storage";
-import {getAnalytics,logEvent} from "firebase/analytics";
 import firebaseConfig from "./config";
 
 class Firebase {
   constructor() {
-    const app = initializeApp(firebaseConfig);
+    initializeApp(firebaseConfig);
 
     this.auth = getAuth();
     this.db = getFirestore();
     this.storage = getStorage();
-    this.analytics = getAnalytics(app);
   }
 
   // AUTH ACTIONS ------------
-
-  // createAccount = (email, password) =>
-  //   createUserWithEmailAndPassword(this.auth, email, password);
 
   createAccount = async (email, password) => {
     try {
@@ -73,12 +68,6 @@ class Firebase {
     }
   };  
 
-  signInWithFacebook = () =>
-    signInWithPopup(this.auth, new FacebookAuthProvider());
-
-  signInWithGithub = () =>
-    signInWithPopup(this.auth, new GithubAuthProvider());
-
   signOut = () => signOut(this.auth);
 
   passwordReset = (email) => sendPasswordResetEmail(this.auth, email);
@@ -95,13 +84,10 @@ class Firebase {
   // Get Order History
   getOrderHistory = (uid) => {
     const orderRef = collection(this.db, "orders");
-    const q = query(orderRef, where("ordId", "==", uid), orderBy("date")
+    const q = query(orderRef, where("ordId", "==", uid), orderBy("timestamp","desc")
     );
     return getDocs(q);
   };
-
-    // Log Event (Custom function for logging events)
-  logEvent = (eventName, eventParams) => logEvent(this.analytics, eventName, eventParams);
 
   // Upload Profile Picture
   uploadProfilePic = (file,uid) => {
@@ -174,26 +160,6 @@ class Firebase {
         .catch((error) => reject(error));
     });
 
-//   reauthenticate = (currentPassword) => {
-//     const user = this.auth.currentUser;
-//     const cred = EmailAuthProvider.credential(user.email, currentPassword);
-
-//     return user.reauthenticateWithCredential(cred);
-//   };
-
-  updateEmail = (currentPassword, newEmail) =>
-    new Promise((resolve, reject) => {
-      this.reauthenticate(currentPassword)
-        .then(() => {
-          const user = this.auth.currentUser;
-          updateEmail(user, newEmail)
-            .then(() => {
-              resolve("Email Successfully updated");
-            })
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    });
 
   updateProfile = (id, updates) =>
     updateDoc(doc(this.db, "users", id), updates);
@@ -299,13 +265,6 @@ class Firebase {
 
   generateKey = () => doc(this.db, "products").id;
 
-//   storeImage = async (id, folder, imageFile) => {
-//     const snapshot = await put(ref(this.storage, `${folder}/${id}`), imageFile);
-//     const downloadURL = await getDownloadURL(snapshot.ref);
-
-//     return downloadURL;
-//   };
-
   deleteImage = (id) => deleteObject(ref(this.storage, `products/${id}`));
 
   editProduct = (id, updates) =>
@@ -315,7 +274,6 @@ class Firebase {
   removeProduct = async (id) => {
     try {
       deleteDoc(doc(this.db, "products", id));
-      console.log(`Product with ID ${id} has been removed.`);
     } catch (error) {
       console.error("Error removing product: ", error);
     }

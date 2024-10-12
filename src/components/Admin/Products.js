@@ -23,9 +23,7 @@ function Products() {
 
   // Handle edit product
   const handleEdit = (productId) => {
-      console.log(products);
       const product = products.find((p) => p.id === productId);
-      console.log(product)
       setEditProduct(product);
       setModalOpen(true); // Open modal for editing
   };
