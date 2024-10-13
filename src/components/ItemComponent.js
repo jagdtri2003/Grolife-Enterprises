@@ -4,7 +4,6 @@ import { useParams, Link } from "react-router-dom";
 import Header from "./Header";
 import { CartContext } from "../context/CartContex.js";
 import { failToast, successToast } from "./ToastComponent.js";
-import product from "../products/products.js";
 import Footer from "./Footer.js";
 import StarRatings from "react-star-ratings";
 import Skeleton from 'react-loading-skeleton';
@@ -23,11 +22,6 @@ const ItemComponent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(product[id]) {
-      setItem(product[id]);
-      setLoading(false);
-      return;
-    }
     fetchProduct();
   }, [id]);
 

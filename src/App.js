@@ -12,7 +12,6 @@ import ItemComponent from './components/ItemComponent';
 import Cart from './components/Cart';
 import { ToastContainer } from 'react-toastify';
 import ContactUs from './components/ContactUs';
-import CategoryResult from './components/CategoryResult';
 import SearchResult from './components/SearchResult';
 import Page404 from './components/Page404';
 import AdminPanel from './components/Admin/AdminPanel';
@@ -63,7 +62,6 @@ function App() {
         <Route path="/item/:id" element={<ItemComponent/>} />
         <Route path='/cart' element={<Cart user={user}/>} />
         <Route path='/contact' element={<ContactUs/>}/>
-        <Route path='/category/:categoryName' element={<CategoryResult/>}/>
         <Route path='/search' element={<SearchResult/>}/>
         <Route path='/admin' element={<AdminPanel/>}/>
         <Route path='*' element={<Page404/>}/>

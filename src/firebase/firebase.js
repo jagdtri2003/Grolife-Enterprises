@@ -95,7 +95,6 @@ class Firebase {
     });
   };
 
-
   signIn = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password);
 
@@ -113,9 +112,7 @@ class Firebase {
       if (!userDocSnapshot.exists()) {
         await setDoc(userDocRef, {
           email: user.email,
-          address: '',
           role:'user', // Default role: user
-          phoneNumber:'',
           createdAt: new Date(),
         });
         console.log('User signed in with Google and Firestore document created');
@@ -203,6 +200,38 @@ class Firebase {
     const orderRef = doc(this.db, "orders", orderId);
     return updateDoc(orderRef, { status: newStatus });
   };
+
+  fetchProductsByCategory = async () => {
+    try {
+      const productsRef = collection(this.db, "products");
+      const productsSnapshot = await getDocs(productsRef);
+  
+      const categories = {};
+  
+      // Group products by category
+      productsSnapshot.forEach((doc) => {
+        const product = { id: doc.id, ...doc.data() };
+        const category = product.Category;
+  
+        if (!categories[category]) {
+          categories[category] = [];
+        }
+
+        categories[category].push(product);
+      });
+  
+      const groupedProducts = Object.keys(categories).map((category) => ({
+        category,
+        items: categories[category],
+      }));
+  
+      return groupedProducts;
+    } catch (error) {
+      console.error("Error fetching products: ", error);
+      return [];
+    }
+  };
+  
 
   passwordUpdate = (password) => updatePassword(this.auth.currentUser, password);
 
