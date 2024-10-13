@@ -10,7 +10,7 @@ function ProductModal({ isOpen, onClose, onSave, product }) {
   const [file, setFile] = useState(null); 
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = () => {
-    const productData = { Name: name, Price: price, Image: image, Category: category, Featured: featured };
+    const productData = { Name: name.toLowerCase(), Price: price, Image: image, Category: category.toLowerCase(), Featured: featured };
     onSave(productData);
     // Reset the form
     setName("");

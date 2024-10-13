@@ -87,10 +87,20 @@ function Products() {
       {
         Header: "Product Name",
         accessor: "Name",
+        Cell: ({ value }) => (
+          <>
+            {value[0].toUpperCase() + value.slice(1).toLowerCase()}
+          </>
+        ),
       },
       {
         Header: "Category",
         accessor: "Category",
+        Cell: ({ value }) => (
+          <>
+            {value[0].toUpperCase() + value.slice(1).toLowerCase()}
+          </>
+        ),
       },
       {
         Header: "Price",

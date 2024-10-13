@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
-import { useSearchParams, Link,useNavigate } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import Footer from "./Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import '../style/pagination.css';
-import { setItemTillMidnight, getItemWithExpiry } from "../util/localStorage";
 import firebaseInstance from "../firebase/firebase";
 
 function SearchResult() {
 
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const query = searchParams.get("q");
@@ -26,16 +24,8 @@ function SearchResult() {
       setLoading(true);
       setProducts([]); // Clear previous products
       setSortedProducts([]); // Clear previous sorted products
-      if (getItemWithExpiry(query.toLowerCase())) {
-        setProducts(JSON.parse(getItemWithExpiry(query.toLowerCase())));
-        setSortedProducts(JSON.parse(getItemWithExpiry(query.toLowerCase())));
-        setLoading(false);
-        return;
-      }
       try {
         const product = await firebaseInstance.searchProducts(query);
-        console.log(product);
-        setItemTillMidnight(query.toLowerCase(), JSON.stringify(product));
         setProducts(product);
         setSortedProducts(product);
       } catch (error) {
@@ -52,17 +42,17 @@ function SearchResult() {
     if (sortCriteria === "Price: Low to High") {
       sorted = sorted.sort(
         (a, b) =>
-          parseInt(a.price.replace(",", "")) -
-          parseInt(b.price.replace(",", ""))
+          parseInt(a.Price) -
+          parseInt(b.Price)
       );
     } else if (sortCriteria === "Price: High to Low") {
       sorted = sorted.sort(
         (a, b) =>
-          parseInt(b.price.replace(",", "")) -
-          parseInt(a.price.replace(",", ""))
+          parseInt(b.Price) -
+          parseInt(a.Price)
       );
     } else if (sortCriteria === "Name") {
-      sorted = sorted.sort((a, b) => a.name.localeCompare(b.name));
+      sorted = sorted.sort((a, b) => a.Name.localeCompare(b.Name));
     }
     setSortedProducts(sorted);
   }, [sortCriteria, products]);
@@ -120,7 +110,7 @@ function SearchResult() {
         ) : sortedProducts.length > 0 ? (
           <div style={{ paddingBottom: "30px" }} className="product-list">
             {sortedProducts.map((product, index) => (
-              <ProductCard key={`${product.asin}-${index}`} product={product} />
+              <ProductCard key={`${product.id}-${index}`} product={product} />
             ))}
             <br/>
           </div>

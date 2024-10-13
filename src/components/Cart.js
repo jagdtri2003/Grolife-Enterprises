@@ -49,8 +49,6 @@ const Cart = ({user}) => {
 
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [discount, setDiscount] = useState(null);
-  const [promoCode, setPromoCode] = useState("");
   const [totalAmount, setTotalAmount] = useState(() => {
     return cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -61,23 +59,9 @@ const Cart = ({user}) => {
     setTotalAmount(
       cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
     );
-    if(promoCode === "FREE20" && totalAmount>200){
-      setDiscount(totalAmount*0.2);
-    }else{
-      setDiscount(null);
-    }
-  },[cartItems, totalAmount,promoCode]);
+  },[cartItems, totalAmount]);
   const handleRemove = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-
-  const handleApplyPromoCode = () => {
-    // Apply promo code logic here
-    setPromoCode(document.getElementById('promo-code').value);
-    if (promoCode === "FREE20" && totalAmount>200) {
-      setDiscount(totalAmount*0.2);
-    }
   };
 
   const handleCheckout = () =>{
@@ -85,13 +69,12 @@ const Cart = ({user}) => {
         failToast("Please login to continue");
         navigate("/login");
       }else{
-        // handlePayment(discount ? (totalAmount*100)-(discount.toFixed(2)*100) : totalAmount * 100,cartItems,setCartItems)
         setModalOpen(true);
       }
   }
   const handleAddressSubmit = ({ address, phoneNumber }) => {
     // Process payment with address and phone number
-    handlePayment(discount ? (totalAmount * 100) - (discount.toFixed(2) * 100) : totalAmount * 100, cartItems, setCartItems, address, phoneNumber);
+    handlePayment(totalAmount * 100, cartItems, setCartItems, address, phoneNumber);
   };
 
   return (
@@ -140,8 +123,7 @@ const Cart = ({user}) => {
                 <div className="order-summary">
                   <h2>Order summary</h2>
                   <p>Sub total: ₹ {totalAmount.toFixed(2)}</p>
-                  {discount && <p>Discount: ₹ {discount.toFixed(2)} ({promoCode})</p> }
-                  <p>Total: ₹ {discount ? totalAmount.toFixed(2)-discount.toFixed(2) : totalAmount.toFixed(2)}</p> 
+                  <p>Total: ₹ {totalAmount.toFixed(2)}</p> 
                   <p>(Inclusive of tax ₹ 0.00)</p>
                   <button onClick={handleCheckout}
                      className="checkout-button">PLACE ORDER</button>

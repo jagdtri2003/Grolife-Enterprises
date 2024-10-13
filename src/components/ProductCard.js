@@ -9,10 +9,12 @@ function ProductCard({product}) {
 
   const {addToCart} = useContext(CartContext);
   const [limitedTimeDeal, setLimitedTimeDeal] = useState(false);
-
+  
   useEffect(() => {
+    product["discountPrice"] = parseInt(product["Price"]) + parseInt(Math.random() * 10) +1; 
+    product["rating"] = parseFloat(3.5+Math.random()*2.5);
     setLimitedTimeDeal(Math.random() > 0.5);
-  }, []);
+  }, [product]);
 
   const handleAddToCart = (item) => {
     addToCart(
@@ -41,7 +43,7 @@ function ProductCard({product}) {
         <div className="product-rating">
           <span>
           <StarRatings
-            rating={parseFloat(Math.random() * 5)}
+            rating={product.rating}
             starRatedColor="orange"
             starDimension="20px"
             starSpacing="5px"
@@ -57,7 +59,7 @@ function ProductCard({product}) {
             Currently Out of Stock
           </div> }
           { product.discountPrice !== 'N/A' && <span className="original-price">M.R.P: {product.discountPrice }</span> }
-          {/* { product.discountPrice !== 'N/A' && <span className="discount">{((parseInt(product.discountPrice.slice(1).replace(/,/g, ''))-parseInt(product.price.replace(/,/g, '')))/(parseInt(product.discountPrice.slice(1).replace(/,/g, '')))*100).toFixed(0)}% off</span> }  */}
+          { product.discountPrice !== 'N/A' && <span className="discount">{((parseInt(product.discountPrice)-parseInt(product.Price))/(parseInt(product.discountPrice))*100).toFixed(0)}% off</span> } 
         </div>
         <button onClick={(e)=>{
               handleAddToCart(product)
