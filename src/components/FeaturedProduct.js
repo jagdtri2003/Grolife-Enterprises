@@ -26,7 +26,7 @@ function FeaturedProducts() {
     },[])
   return (
     <section className="featured-products">
-      {loading && <div style={{width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fa-duotone fa-solid fa-loader fa-spin-pulse" style={{fontSize:'50px'}}></i></div>}
+      {loading && <div style={{width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}><i className="fa-duotone fa-solid fa-loader fa-spin-pulse" style={{fontSize:'50px'}}></i></div>}
       {(!loading) && 
       <>
       <div className='heading-container'>
@@ -38,7 +38,7 @@ function FeaturedProducts() {
           {featuredList && featuredList.map((item,index) => (
               <Link to={`/item/${item[1]}`} className="product-card" key={index}>
                   <img style={{height:'80%'}} loading='lazy' src={item[0]} alt="" />
-                  <div className='discount'> <span className='discount-per'>{createDiscount()}% off</span> Limited time deal</div>
+                  <div className='discount'> <span style={{marginRight:'20px'}} className='discount-per'>Trending Now</span> Limited time deal</div>
               </Link>
           ))}
         </div></>}

@@ -9,7 +9,7 @@ import AddressModal from "./AdressModal";
 
 const CartItem = ({ item, onRemove }) => (
   <div className="cart-item">
-    <table>
+    <table className="cartTable">
       <tbody>
         <tr>
           <td>
@@ -19,10 +19,8 @@ const CartItem = ({ item, onRemove }) => (
           </td>
           
           <td>
-          <h4>{item.name.length > 60 ? item.name.substring(0, 60) + "..." : item.name}</h4>
+          <h4>{item.name.length > 60 ? item.name[0].toUpperCase()+item.name.slice(1,60) + "..." : item.name[0].toUpperCase() + item.name.slice(1)}</h4>
             <p>
-              Sku: {item.sku}
-              <br />
               Added on : {item.added}
             </p>
             <button className="remove-button" onClick={() => onRemove(item.id)}>

@@ -107,3 +107,27 @@
   text-align: center;
   color: #999;
 }
+
+@media (max-width: 660px) {
+  .order-table{
+    width: 100% !important;
+  }
+  .order-table th:nth-child(1), .order-table td:nth-child(1){
+    display: none !important;
+  }
+  .order-table th, .order-table td{
+    max-width: 30vw;
+  }
+  .order-table th:nth-child(5), .order-table td:nth-child(5){
+    max-width: 15vw;
+  }
+  .order-table td:nth-child(3)::after{
+    content: " " !important;
+  }
+  .order-table td:nth-child(4),
+  .order-table td:nth-child(5) {
+   display: table-cell !important;
+ }  
+} 
+
+

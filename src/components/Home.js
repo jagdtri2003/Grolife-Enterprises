@@ -34,7 +34,7 @@ function Home() {
     <ImageSlider images={images} />
     <FeaturedProducts/>
     <Categories/>
-    {loading && <div style={{width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}><i class="fa-duotone fa-solid fa-loader fa-spin-pulse" style={{fontSize:'50px'}}></i></div>}
+    {loading && <div style={{width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}><i className="fa-duotone fa-solid fa-loader fa-spin-pulse" style={{fontSize:'50px'}}></i></div>}
     {!loading && products.map((product, index) => (
       <ProductCategory key={index} category={product.category} items={product.items} />
     ))}

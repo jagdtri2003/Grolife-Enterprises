@@ -124,7 +124,7 @@ const UserProfile = ({ user }) => {
           <div className="order-history">
             <h2>Order History</h2>
             {orders.length > 0 ? (
-              <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+              <table className='order-table' {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                 <thead>
                   {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()} style={{ borderBottom: '2px solid #ddd' }}>
