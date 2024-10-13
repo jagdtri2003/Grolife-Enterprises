@@ -6,41 +6,47 @@ import { Link } from 'react-router-dom';
 function Categories() {
     const featuredList = [
       {
-        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx_IUp3XUFcjJtM15SD0YenbMmely5oLLN-A&s',
-        title:'Jewelry',
-        desc:'Discover our exquisite collection of jewelry with precious elements, where elegance meets craftsmanship.',
-        link:'Jewelry'
+        img:'https://www.jiomart.com/images/product/original/rvva2bsxc3/foodcan-mix-dry-fruits-seeds-and-nuts-fresh-and-healthy-dry-fruits-seeds-nuts-mix-50g-pack-product-images-orvva2bsxc3-p599259561-1-202303120019.jpg?im=Resize=(420,420)',
+        title:'Dry Fruit',
+        desc:'Fuel your day with the finest selection of premium dry fruits, packed with natural nutrients and rich flavors.',
+        link:'Dry Fruit'
       }
         ,
         {
-          img:'https://cdn.vox-cdn.com/thumbor/3w70tjAjKqJupjMH5cHEQesbD5U=/0x0:2040x1360/2000x1333/filters:focal(1020x680:1021x681)/cdn.vox-cdn.com/uploads/chorus_asset/file/23795434/vpavic_220708_5335_0076.jpg',
-          title:'Mobile Phones',
-          desc:"Explore our wide range of mobile phones, featuring the latest technology and cutting-edge designs.",
-          link:'Smartphone'
+          img:'https://www.healthyeating.org/images/default-source/home-0.0/nutrition-topics-2.0/general-nutrition-wellness/2-2-2-2foodgroups_vegetables_detailfeature.jpg?sfvrsn=226f1bc7_6',
+          title:'Vegetable',
+          desc:"Discover farm-fresh vegetables bursting with vibrant flavors and essential nutrients.Enjoy the healthiest choices!",
+          link:'Vegetable'
         },
         {
-          img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStn-MtID2dZPKfdnzZmgF1kzehZSZSyIrXRw&s',
-          title:'Clothes',
-          desc:'Browse our stylish clothing collection, offering a variety of fashionable pieces for every occasion. ',
-          link:'Clothes'
+          img:'https://www.euroschoolindia.com/wp-content/uploads/2023/04/ways-to-eat-more-fruit.jpg',
+          title:'Fruits',
+          desc:'Savor the sweetness of nature with our fresh, juicy fruits, picked at peak ripeness for maximum flavor and nutrition!',
+          link:'Fruit'
         },
         {
-          img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN7k6cmg18_6MEJ8znD1NJig27U-MmgFTaFg&s',
-          title:'Laptop',
-          desc:'Discover our comprehensive range of laptops, designed to meet all your computing needs. ',
-          link:'Laptop'
+          img:'https://4.imimg.com/data4/IO/YE/MY-19092185/kitchen-gas-lighter-500x500.jpg',
+          title:'Kitchen Appliance',
+          desc:'Discover our comprehensive range of Kitchen Appliances, designed to meet all your needs. ',
+          link:'Kitchen Appliance'
         },
         {
-          img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7aZ1_Q0XYNXUUsVYNEYvhKz5t3i9a5X5rdw&s',
-          title:'Shoes',
-          desc:'Step into style with our diverse collection of shoes, perfect for every occasion and lifestyle.',
-          link:'Shoes'
+          img:'https://t4.ftcdn.net/jpg/02/17/97/11/360_F_217971177_4mV3Vl6LrIrDCCje2RRAyz4eyPdwrKpl.jpg',
+          title:'Disposable Plates',
+          desc:'Stay productive and productive with our Disposable Laptops.',
+          link:'Disposable Plates'
         },
         {
-          img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8kPdqlz2d4dYcKlnzHgxMSxn9dsk8IaUbhA&s',
-          title:'Television',
-          desc:'Transform your viewing experience with our selection of TVs, crafted to deliver stunning visuals.',
-          link:'TV'
+          img:'https://m.media-amazon.com/images/I/81nUtfk0rtL.jpg',
+          title:'Bakery & Cakes',
+          desc:'Explore our range of baked goods and cakes, perfect for any occasion.',
+          link:'Bakery & Cakes'
+        },
+        {
+          img:"https://www.dairyfoods.com/ext/resources/DF/2020/August/df-100/GettyImages-1194287257.jpg?t=1597726305&width=696",
+          title:'Dairy Products',
+          desc:'Our range of dairy products offers a wide variety of healthy options.',
+          link:'Dairy Products'
         }
     ]
   return (

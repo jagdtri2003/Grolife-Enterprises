@@ -21,14 +21,12 @@ function Products() {
   }, []);
 
 
-  // Handle edit product
   const handleEdit = (productId) => {
       const product = products.find((p) => p.id === productId);
       setEditProduct(product);
-      setModalOpen(true); // Open modal for editing
+      setModalOpen(true);
   };
 
-  // Handle delete product
   const handleDelete = (productId) => {
     confirmAlert({
       title: "Confirm to delete",
@@ -54,13 +52,10 @@ function Products() {
     });
   };
 
-  // Handle save (add/edit)
   const handleSaveProduct = async (productData) => {
     if (editProduct) {
-      // If editing, update product
       await firebaseInstance.updateProduct(editProduct.id, productData);
     } else {
-      // If adding, add a new product
       await firebaseInstance.addProduct(productData);
     }
     await getProducts(); // Refresh products list

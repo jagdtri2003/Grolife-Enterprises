@@ -88,14 +88,20 @@ const Orders = () => {
         Header: 'Status',
         accessor: 'status', // Display the current status of the order with a dropdown to change it
         Cell: ({ row, value }) => (
-          <select
-            value={value}
-            onChange={(e) => handleStatusChange(row.original.id, e.target.value)}
-          >
-            <option value="Pending">Pending</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
+          value === 'Delivered' ? (
+            <p style={{ color: 'green',fontWeight: 'bold' }}>{value}</p>
+          ) : value === 'Cancelled' ? (
+            <p style={{ color: 'red',fontWeight: 'bold' }}>{value}</p>
+          ) : (
+            <select
+              value={value}
+              onChange={(e) => handleStatusChange(row.original.id, e.target.value)}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          )
         ),
       },
     ],
