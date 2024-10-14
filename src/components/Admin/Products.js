@@ -13,11 +13,17 @@ function Products() {
   const getProducts = async () => {
     setProducts([]);
     const pro = await firebaseInstance.fetchProducts();
+    sessionStorage.setItem("admin-products", JSON.stringify(pro));
     setProducts(pro);
   };
 
   useEffect(() => {
-    getProducts();
+    const storedProducts = sessionStorage.getItem("admin-products");
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+    }else{
+      getProducts();
+    }
   }, []);
 
 
@@ -37,8 +43,12 @@ function Products() {
           onClick: async () => {
             try {
               await firebaseInstance.removeProduct(productId); // Wait for deletion
-              console.log("Product deleted successfully.");
-              await getProducts(); // Refresh product list
+              const updatedProducts = products.filter(
+                (product) => product.id !== productId
+              );
+              setProducts(updatedProducts);
+              sessionStorage.setItem("admin-products", JSON.stringify(updatedProducts));
+              // await getProducts(); // Refresh product list
             } catch (error) {
               console.error("Error deleting product: ", error);
             }
@@ -55,10 +65,15 @@ function Products() {
   const handleSaveProduct = async (productData) => {
     if (editProduct) {
       await firebaseInstance.updateProduct(editProduct.id, productData);
+      const updatedProducts = products.map((product) =>
+        product.id === editProduct.id ? { ...productData, id: editProduct.id } : product
+      );
+      setProducts(updatedProducts);
+      sessionStorage.setItem("admin-products", JSON.stringify(updatedProducts));
     } else {
       await firebaseInstance.addProduct(productData);
-    }
-    await getProducts(); // Refresh products list
+      await getProducts();
+    } // Refresh products list
     setModalOpen(false); // Close the modal
   };
 
