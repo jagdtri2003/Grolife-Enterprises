@@ -19,7 +19,7 @@
   
   .search-bar {
     flex: 1;
-    margin: 0 20px;
+    margin: 0 15px;
     padding: 5px;
     outline: none;
     border-radius: 10px;
@@ -30,7 +30,7 @@
   }
   
   .navigation-item  {
-    padding: 5px 10px;
+    padding: 5px;
     text-decoration: none;
     color: #333;
     font-size: 21px;
@@ -78,4 +78,30 @@
   .category-header h2{
     font-size: 20px;
   }
+
+}
+@media (max-width:420px){ 
+  .logo{
+    font-size: 17px;
+  }
+  .navigation-item {
+    font-size: 16px;
+  }
+  .search-logo{
+    margin-left : -55px;
+    /* margin-top: 10px; */
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .cart-icon {
+    font-size: 16px;
+  }
+  .cart-count {
+    font-size: 8px;
+  }
+
+  
+  
 }
