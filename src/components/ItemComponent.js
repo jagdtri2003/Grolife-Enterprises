@@ -3,7 +3,7 @@ import "../style/itemcomponent.css";
 import { useParams, Link } from "react-router-dom";
 import Header from "./Header";
 import { CartContext } from "../context/CartContex.js";
-import { failToast, successToast } from "./ToastComponent.js";
+import { successToast } from "./ToastComponent.js";
 import Footer from "./Footer.js";
 import StarRatings from "react-star-ratings";
 import Skeleton from 'react-loading-skeleton';

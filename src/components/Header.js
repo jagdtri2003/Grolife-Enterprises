@@ -13,7 +13,14 @@ function Header({query}) {
 
   recognition.continuous = false;
   recognition.interimResults = false;
-  recognition.lang = 'en-US'; // Set language preference  
+  recognition.lang = 'en-US';
+  const navigate = useNavigate();
+
+  const handleSubmit = () =>{
+    if (search.trim()){
+      navigate(`/search/?q=${search.toLowerCase()}`);
+    }
+  }
 
   const startListening = () => {
     setIsListening(true);
@@ -31,6 +38,9 @@ function Header({query}) {
       transcript += event.results[i][0].transcript;
     }
     setSearch(transcript);
+    if(transcript.trim()){
+      navigate(`/search/?q=${transcript.toLowerCase()}`);
+    }
   };  
   recognition.onend = () => {
     setIsListening(false);  
@@ -42,13 +52,6 @@ function Header({query}) {
     }
   },[query])
 
-  const navigate = useNavigate();
-
-  const handleSubmit = () =>{
-    if (search.trim()){
-      navigate(`/search/?q=${search.toLowerCase()}`);
-    }
-  }
   const handleKeyDown = (e) =>{
     if(e.key ==='Enter'){
       handleSubmit();
@@ -67,7 +70,6 @@ function Header({query}) {
             <i title="Your Cart" className="fa-duotone fa-cart-shopping cart-icon"></i>
             <div className="cart-count" id="cart-count">{cart || 0}</div>
         </div>
-          
         </Link>
       </nav>
     </header>
