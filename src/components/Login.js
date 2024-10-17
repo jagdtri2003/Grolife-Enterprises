@@ -21,7 +21,6 @@ function Login() {
 
   const handleGoogleSignIn = () => {
     firebaseInstance.signInWithGoogle().then((result) => {
-      console.log(result);
       navigate(from, { replace: true });
     }).catch((error) => {
       console.error(error);
