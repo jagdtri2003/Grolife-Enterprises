@@ -30,14 +30,20 @@ const AddressModal = ({ isOpen, onClose, onSubmit }) => {
         
         const options = {method: 'GET', headers: {accept: 'application/json'}};
 
-        fetch(`https://us1.locationiq.com/v1/reverse?lat=${latitude}&lon=${longitude}&format=json&key=pk.4cb6822cb40a515d8d8c5f7d02cca2ca`, options)
+        fetch(`https://us1.locationiq.com/v1/reverse?lat=${latitude}&lon=${longitude}&format=json&zoom=18&key=pk.4cb6822cb40a515d8d8c5f7d02cca2ca`, options)
           .then(res => res.json())
           .then(res => setAddress(res.display_name))
           .catch(err => console.error(err));
       }, 
       (error) => {
         console.error("Error getting location:", error);
-        alert("Unable to retrieve your location.");
+        // alert("Unable to retrieve your location.");
+        alert(error);
+        setLocationLoading(false);
+      },{
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
       });
     } else {
       alert("Geolocation is not supported by your browser.");
