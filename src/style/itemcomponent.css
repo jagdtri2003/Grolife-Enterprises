@@ -51,7 +51,7 @@
 .add-to-cart {
   text-align: center;
   text-transform: uppercase;
-  background-color:#E0F7FA ;
+  background-color:yellow ;
   color: #000;
   border: 1px solid black;
   padding: 10px 20px;
@@ -60,6 +60,7 @@
   font-size: 1em;
   width:100%;
   max-width: 400px;
+  font-weight: 800;
 }
 
 .count-btn{
