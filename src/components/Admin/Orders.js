@@ -21,6 +21,19 @@ const Orders = () => {
   useEffect(() => {
     getOrders();
   }, []);
+  function extractLatLong(str) {
+    // Regular expression to find latitude and longitude in curly braces
+    const regex = /\{(-?\d+\.\d+),\s*(-?\d+\.\d+)\}/;
+    const match = str.match(regex);
+    
+    if (match) {
+      const latitude = parseFloat(match[1]);
+      const longitude = parseFloat(match[2]);
+      return { latitude, longitude };
+    } else {
+      return null; // Return null if no coordinates are found
+    }
+  }
 
   // Handle order status change
   const handleStatusChange = async (orderId, newStatus) => {
@@ -81,7 +94,11 @@ const Orders = () => {
         Header: 'Address',
         accessor: 'address', // Display the shipping address of the customer
         Cell: ({ value }) => (
-          <p style={{ margin: 0 }}>{value}</p>
+          extractLatLong(value) ? (
+            <a target="_blank" style={{ margin: 0 ,color:'#1976d2',textDecoration:'none'}} href={`https://www.google.com/maps/search/?api=1&query=${extractLatLong(value).latitude},${extractLatLong(value).longitude}`}>{value}</a>
+          ) : (
+            <p style={{ margin: 0 }}>{value}</p>
+          )
         ),
       },
       {

@@ -5,6 +5,7 @@ const AddressModal = ({ isOpen, onClose, onSubmit }) => {
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [locationLoading,setLocationLoading] = useState(false);
+  const [locationText, setLocationText] = useState('Use Current Location');
 
   React.useEffect(()=>{
       if(localStorage.getItem('address') && localStorage.getItem('phoneNumber')) {
@@ -24,25 +25,28 @@ const AddressModal = ({ isOpen, onClose, onSubmit }) => {
   };
   const handleCurrentLocation = () => {
     setLocationLoading(true);
+    setLocationText('Getting Location...');
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
-        
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
         const options = {method: 'GET', headers: {accept: 'application/json'}};
 
         fetch(`https://us1.locationiq.com/v1/reverse?lat=${latitude}&lon=${longitude}&format=json&zoom=18&key=pk.4cb6822cb40a515d8d8c5f7d02cca2ca`, options)
           .then(res => res.json())
-          .then(res => setAddress(res.display_name))
+          .then(res => {setAddress(res.display_name+`\n{${latitude}, ${longitude}}`);
+            setLocationText("Location Fetched ");
+          })
           .catch(err => console.error(err));
       }, 
       (error) => {
         console.error("Error getting location:", error);
-        // alert("Unable to retrieve your location.");
-        alert(error);
+        alert("Unable to retrieve your location.");
+        // alert(error);
         setLocationLoading(false);
       },{
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 20000,
         maximumAge: 0
       });
     } else {
@@ -77,7 +81,7 @@ const AddressModal = ({ isOpen, onClose, onSubmit }) => {
           <div style={{ display: 'flex', alignItems: 'center',justifyContent: 'center' }}>
             <button type='button'  onClick={handleCurrentLocation}
             disabled={locationLoading}
-            style={{ width: '100%',maxWidth: '250px',padding: '10px 20px',marginBottom:'10px',borderRadius:'5px',backgroundColor:'black',color:'white',cursor:'pointer' }}>Use Current Location &nbsp;<i className="fa-solid fa-location-dot"></i></button> 
+            style={{ width: '100%',maxWidth: '250px',padding: '10px 20px',marginBottom:'10px',borderRadius:'5px',backgroundColor:'black',color:'white',cursor:'pointer' }}>{locationText} &nbsp;<i className="fa-solid fa-location-dot"></i></button> 
           </div>
           <div>
             <label htmlFor="phone">Phone Number:</label>
